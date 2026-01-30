@@ -1,4 +1,4 @@
-name: ManualWinRDP2
+name: blank
 
 on:
   workflow_dispatch:  
