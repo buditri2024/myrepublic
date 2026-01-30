@@ -1,0 +1,38 @@
+name: ManualWinRDP2
+
+on:
+  workflow_dispatch:  
+  schedule:
+    - cron: '45 10 * * 1-5'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout (optional)
+      uses: actions/checkout@v4
+      
+    - name: Restore cache
+      uses: actions/cache@v4
+      id: cache
+      with:
+        path: D:\a\myrepublic\myrepublic\fileme
+        key: static-folder-wxyz
+
+    - name: Download small file
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: pwsh
+      run: |
+        .\gdrivedsmall.ps1 "${{ secrets.GDRIVE_FILE1 }}" "fileme.zip"
+        Expand-Archive fileme.zip
+
+    - name: run file
+      run: |
+          Start-Process "D:\a\myrepublic\myrepublic\fileme\apps\myapp.exe.lnk"
+      shell: powershell
+
+    - name: wait for 2.5 minutes
+      run: Start-Sleep -Seconds 150
+      shell: powershell
+
+      
